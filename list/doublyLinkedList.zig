@@ -59,6 +59,14 @@ pub const doublyLinkedList = struct {
         self.pop();
     }
 
+    pub fn getHead(self: *doublyLinkedList) ?*Node {
+        return self.head;
+    }
+
+    pub fn getTail(self: *doublyLinkedList) ?*Node {
+        return self.tail;
+    }
+
     fn incLen(self: *doublyLinkedList) void {
         self.length += 1;
     }
