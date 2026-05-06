@@ -40,12 +40,23 @@ pub const doublyLinkedList = struct {
         self.resizeLen(1);
     }
 
-    pub fn pop() ?*Node {
+    pub fn pop(self: *doublyLinkedList) ?*Node {
+        if(self.tail == null) return;
+        const retNode = self.tail;
 
+        if(retNode.?.prev) |prev| {
+            prev.next = null;
+            self.tail = prev;
+        } else {
+            self.head = null;
+            self.tail = null;
+        }
+        self.decLen();
+        return retNode;
     }
 
-    pub fn remove() !void  {
-
+    pub fn remove(self: *doublyLinkedList) !void  {
+        self.pop();
     }
 
     fn incLen(self: *doublyLinkedList) void {
