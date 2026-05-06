@@ -12,6 +12,7 @@ pub const doublyLinkedList = struct {
     pub fn init(allocator: std.mem.Allocator) doublyLinkedList {
         return doublyLinkedList {
             .head = null,
+            .tail = null,
             .length = 0,
             .allocator = allocator
         };
@@ -29,7 +30,7 @@ pub const doublyLinkedList = struct {
         if (self.head == null) {
             self.head = new_node;
             self.tail = new_node;
-            self.resizeLen(1);
+            self.incLen();
             return;
         }
 
@@ -37,7 +38,7 @@ pub const doublyLinkedList = struct {
         self.tail.?.next = new_node;
         self.tail = new_node;
 
-        self.resizeLen(1);
+        self.incLen();
     }
 
     pub fn pop(self: *doublyLinkedList) ?*Node {
@@ -53,6 +54,17 @@ pub const doublyLinkedList = struct {
         }
         self.decLen();
         return retNode;
+    }
+    pub fn printList(self: *doublyLinkedList) !void {
+        if(self.head == null) return;
+
+        var cur = self.head;
+
+        while(cur) |node|{
+            std.debug.print("{s}", .{node.payload});
+            if (node.next != null) std.debug.print(" <-> ", .{});
+            cur = node.next;
+        }
     }
 
     pub fn remove(self: *doublyLinkedList) !void  {
