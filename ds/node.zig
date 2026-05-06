@@ -1,5 +1,5 @@
-pub const node = struct {
+pub const Node = struct {
     payload: []const u8,
-    next:    ?*node,
-    prev:    ?*node 
+    next:    ?*Node,
+    prev:    ?*Node 
 };
