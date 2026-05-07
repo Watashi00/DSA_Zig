@@ -18,9 +18,9 @@ pub fn doublyLinkedList(comptime T: type) type {
         }
 
         pub fn append(self: *Self, content: T) !void {
-            const new_node = try self.allocator.create(Node);
+            const new_node = try self.allocator.create(ListNode);
 
-            new_node.* = Node{
+            new_node.* = ListNode{
                 .payload = content,
                 .next = null,
                 .prev = null,
@@ -86,7 +86,7 @@ pub fn doublyLinkedList(comptime T: type) type {
             var cur = self.head;
 
             while (cur) |node| {
-                std.debug.print("{s}", .{node.payload});
+                std.debug.print("{any}", .{node.payload});
                 if (node.next != null) std.debug.print(" <-> ", .{});
                 cur = node.next;
             }
