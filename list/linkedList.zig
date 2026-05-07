@@ -16,5 +16,15 @@ pub fn linkedList(comptime T: type) type {
             return Self{ .head = null, .length = 0, .allocator = allocator };
         }
 
+
+        pub fn deinit(self: *Self) void {
+            var cur = self.head;
+            while (cur) |node| {
+                const next = node.next;
+                self.allocator.destroy(node);
+                cur = next;
+            }
+        }
+
     };
 }
