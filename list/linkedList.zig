@@ -16,6 +16,19 @@ pub fn linkedList(comptime T: type) type {
             return Self{ .head = null, .length = 0, .allocator = allocator };
         }
 
+        pub fn append(self: *Self, content: T) !void {
+            const new_node = try self.allocator.create(content);
+            new_node.* = ListNode {
+                .payload = content,
+                .next = null,
+
+            };
+            if (self.head == null) {
+                self.head = new_node;
+                //TODO: Create an incLen function and implement here
+                return;
+            }
+        }
 
         pub fn deinit(self: *Self) void {
             var cur = self.head;
