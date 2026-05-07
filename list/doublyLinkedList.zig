@@ -16,7 +16,7 @@ pub fn doublyLinkedList(comptime T: type) type {
         pub fn init(allocator: std.mem.Allocator) Self {
             return Self{ .head = null, .tail = null, .length = 0, .allocator = allocator };
         }
-
+        /// O(1) append
         pub fn append(self: *Self, content: T) !void {
             const new_node = try self.allocator.create(ListNode);
 
