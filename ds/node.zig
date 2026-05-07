@@ -6,3 +6,10 @@ pub fn Node(comptime T: type) type {
     };
 
 }
+
+pub fn sNode(comptime T: type) type {
+    return struct {
+        payload: T,
+        next: ?*@This(),
+    };
+}
