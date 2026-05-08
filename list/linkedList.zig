@@ -37,6 +37,19 @@ pub fn linkedList(comptime T: type) type {
             self.incLen();
         }
 
+        pub fn remove(self: *Self) void {
+            if(self.head == null) return;
+            self.head = self.head.?.next;
+            self.decLen();
+        }
+
+        pub fn pop(self: *Self) ?*ListNode {
+            if (self.head == null) return null;
+            const retNode = self.head.?;
+            self.remove();
+            return retNode;
+        } 
+
         fn decLen(self: *Self) void {
             if (self.length == 0) {
                 @panic("length underflow");
