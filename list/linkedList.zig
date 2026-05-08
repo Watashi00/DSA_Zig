@@ -61,6 +61,32 @@ pub fn linkedList(comptime T: type) type {
             self.length += 1;
         }
 
+        pub fn get(self: *Self) ?*ListNode {
+            return self.head;
+        }
+
+        pub fn getByIndex(self: *Self, index: usize) ?*ListNode {
+            if (self.head == null or index >= self.length) return null;
+            var cur = self.head;
+            var i: usize = 0;
+            while (cur) |node| {
+                if (i == index) return node;
+                cur = node.next;
+                i += 1;
+            }
+            return null;
+        }
+
+        pub fn printList(self: *Self) !void { 
+            if(self.head == null) return;
+            var cur = self.head;
+            while(cur) |node| {
+                std.debug.print("{any}", .{node.payload});
+                if (node.next != null) std.debug.print(" -> ", .{});
+                cur = node.next;
+            }
+        }
+
         pub fn deinit(self: *Self) void {
             var cur = self.head;
             while (cur) |node| {
