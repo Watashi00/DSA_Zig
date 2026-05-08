@@ -17,7 +17,7 @@ pub fn linkedList(comptime T: type) type {
         }
         /// O(n) append
         pub fn append(self: *Self, content: T) !void {
-            const new_node = try self.allocator.create(content);
+            const new_node = try self.allocator.create(ListNode);
             new_node.* = ListNode {
                 .payload = content,
                 .next = null,
@@ -29,26 +29,86 @@ pub fn linkedList(comptime T: type) type {
                 return;
             }
             var cur = self.head;
-            while (cur.?.next) |node|{
+            while (cur) |node| {
+                if (node.next == null) {
+                    node.next = new_node;
+                    break;
+                }
                 cur = node.next;
             }
-
-            cur.?.next = new_node;
             self.incLen();
         }
 
+        /// O(1) prepend
+        pub fn prepend(self: *Self, content: T) !void {
+            const new_node = try self.allocator.create(ListNode);
+            new_node.* = ListNode{
+                .payload = content,
+                .next = self.head,
+            };
+            self.head = new_node;
+            self.incLen();
+        }
+
+        /// O(n) insert
+        pub fn insert(self: *Self, index: usize, content: T) !void {
+            if (index == 0) return self.prepend(content);
+            if (index >= self.length) return self.append(content);
+
+            const new_node = try self.allocator.create(ListNode);
+            new_node.* = ListNode{
+                .payload = content,
+                .next = null,
+            };
+
+            var cur = self.head;
+            var i: usize = 0;
+            while (cur) |node| : (i += 1) {
+                if (i == index - 1) {
+                    new_node.next = node.next;
+                    node.next = new_node;
+                    self.incLen();
+                    return;
+                }
+                cur = node.next;
+            }
+        }
+
         pub fn remove(self: *Self) void {
-            if(self.head == null) return;
-            self.head = self.head.?.next;
-            self.decLen();
+            if (self.pop()) |node| {
+                self.allocator.destroy(node);
+            }
         }
 
         pub fn pop(self: *Self) ?*ListNode {
-            if (self.head == null) return null;
-            const retNode = self.head.?;
-            self.remove();
-            return retNode;
+            if (self.head) |headNode| {
+                self.head = headNode.next;
+                self.decLen();
+                return headNode;
+            }
+            return null;
         } 
+
+        pub fn popByIndex(self: *Self, index: usize) ?*ListNode {
+            if (self.head == null or index >= self.length) return null;
+            
+            if (index == 0) return self.pop();
+
+            var cur = self.head;
+            var i: usize = 0;
+            while (cur) |node| : (i += 1) {
+                if (i == index - 1) {
+                    const retNode = node.next;
+                    if (retNode) |rm_node| {
+                        node.next = rm_node.next;
+                        self.decLen();
+                        return rm_node;
+                    }
+                }
+                cur = node.next;
+            }
+            return null;
+        }
 
         fn decLen(self: *Self) void {
             if (self.length == 0) {
